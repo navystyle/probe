@@ -1,17 +1,19 @@
-# PST-STACK
+## TAB (tiny-account-bank)
 
-## Installation
+### Installation
 
-Just `git clone https://github.com/previewict/pst-stack`
+1. `git clone https://github.com/navystyle/tab`
 
-Copy/paste `config/settings.sample` file to `config/settings.php`. And copy, paste `propel/propel.xml` with your database configuration. But don't change the DB name. If you change the DB name then the whole database thing needs to be re-generate that can brake the entire project. This step is necessary only 
-for running propel migrate command if any of your team member update schema.
+2. copy/paste `config/settings.sample` file to `config/settings.php`.
 
-Now run `sudo chmod a+x propel_migreate.sh && sudo ./propel_migrate.sh` to upgrade or install your database.
-
-Now finally you have to copy, paste the config.php file to configure your project.
- 
- After that create the virtual host and you are ready to go.
+3. `composer install`
  
 ### Migrating schema
-`sudo ./propel_migrate.sh`
+1. `./vendor/bin/propel database:revserse tab` create `schema.xml` into `/generated-reversed-database/`
+
+2. move the contents of `/generated-reversed-database/schema.xml` to `/propel/tab.schema.xml`
+
+3. propel model build `./vendor/bin/propel model:build` makes model into `/src/App/Models/`
+
+### Routes
+using slim annotation route right here `/src/App/Controllers/`
