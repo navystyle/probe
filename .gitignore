@@ -1,0 +1,10 @@
+# project specific directory
+vendor/
+tmp/*
+propel/
+config/settings.php
+generated-reversed-database/
+
+# editor specific directory
+.DS_STORE
+.idea/*
