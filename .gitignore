@@ -4,6 +4,8 @@ tmp/*
 propel/
 config/settings.php
 generated-reversed-database/
+/composer.lock
+*.bak
 
 # editor specific directory
 .DS_STORE
