@@ -45,6 +45,17 @@ return [
             ]
         ],
 
+        ## Reverse settings
+        'reverse' => [
+            # The connection to use to reverse the database
+            'connection' => $conf['app.namespace'],
+
+            # Reverse parser class can be different from migration one
+            # If you leave this property blank, Propel looks for an appropriate parser class, based on platform: i.e.
+            # if the platform is `MysqlPlatform` then parser is `\Propel\Generator\Reverse\MysqlSchemaParser`
+            'parserClass' => '\\Propel\\Generator\\Reverse\\MysqlSchemaParser', //string
+        ],
+
         ## Runtime settings ##
         'runtime' => [
             'defaultConnection' => $conf['app.namespace'],
