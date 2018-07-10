@@ -28,7 +28,6 @@ return [
             'connections' => [
                 $conf['app.namespace'] => [
                     'adapter' => 'mysql',
-//                    'dsn' => 'mysql:host=db.local;port=3306;dbname=tab',
                     'dsn' => 'mysql:host=' . $conf['app.db.host'] . ';port=' . $conf['app.db.port'] . ';dbname=' . $conf['app.db.name'],
                     'user' => $conf['app.db.username'],
                     'password' => $conf['app.db.password'],
