@@ -6,7 +6,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use UserQuery;
 
 /**
- * @RoutePrefix("/users")
+ * @RoutePrefix("/api/users")
  */
 class UserController extends Controller
 {
