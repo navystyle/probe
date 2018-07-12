@@ -3,7 +3,14 @@
 namespace App;
 
 
-class App
+trait App
 {
+    protected $validator;
+
+    public function __construct()
+    {
+
+    }
+
 
 }

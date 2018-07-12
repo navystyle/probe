@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Propel\Runtime\ActiveQuery\Criteria;
 use UserQuery;
+use Respect\Validation\Validator as v;
 
 /**
  * @RoutePrefix("/api/users")
@@ -50,6 +51,35 @@ class UserController extends Controller
      */
     public function postAction()
     {
-        print_r($this->getRequest('name'));
+        //
+    }
+
+    /**
+     * @Route("/get-test", methods={"GET"}, name="users.gettest")
+     * @throws \Exception
+     */
+    public function getTestAction()
+    {
+//        throw new \Exception('aa', 404);
+        print_r($this->validator);
+    }
+
+    /**
+     * @Route("/post-test", methods={"POST"}, name="users.posttest")
+     */
+    public function postTestAction()
+    {
+        $validator = $this->validator->validate($this->request, [
+            'email' => v::email(),
+            'name' => v::length(1, 30)
+        ]);
+
+        if ($validator->isValid()) {
+            $result = "success";
+        } else {
+            $result = $validator->getErrors();
+        }
+
+        return $result;
     }
 }
