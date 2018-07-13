@@ -23,5 +23,8 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'database.php';
 # container
 require __DIR__ . DIRECTORY_SEPARATOR . '/container.php';
 
+# routes
+require __DIR__ . DIRECTORY_SEPARATOR . '/routes.php';
+
 # middleware
 require __DIR__ . DIRECTORY_SEPARATOR . '/middleware.php';

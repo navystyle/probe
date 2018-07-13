@@ -31,28 +31,16 @@ $container["errorHandler"] = function ($container) {
     return new ApiErrorHandler($container["logger"]);
 };
 
+# php error handler
 $container["phpErrorHandler"] = function ($container) {
     return $container["errorHandler"];
-};
-
-# router
-$container['router'] = function () use ($app, $conf) {
-    return new \Ergy\Slim\Annotations\Router($app,
-        $conf['app.controller_dir'], // Path to controller files, will be scanned recursively
-        $conf['app.router_cache_dir'] // Path to annotations router cache files, must be writeable by web server, if it doesn't exist, router will attempt to create it
-    );
-};
-
-# validator
-$container['validator'] = function () {
-    return new Awurth\SlimValidation\Validator();
 };
 
 # jwt
 $container["JwtAuthentication"] = function ($container) use ($conf) {
     return new JwtAuthentication([
-        'path' => '/api',
-        'ignore' => ['/api/users/get-test', '/api/users/post-test'],
+        'path' => '/api2',
+//        'ignore' => ['/api/users/get-test', '/api/users/post-test'],
         'logger' => $container['logger'],
         'attribute' => 'decoded_token_data',
         'secret' => $conf['jwt.secret'],
@@ -69,6 +57,11 @@ $container["JwtAuthentication"] = function ($container) use ($conf) {
                 ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
         },
     ]);
+};
+
+# validator
+$container['validator'] = function () {
+    return new App\Validation\Validator();
 };
 
 # view

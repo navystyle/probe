@@ -25,13 +25,20 @@ final class ApiErrorHandler extends AbstractError
 
     public function __invoke(Request $request, Response $response, Throwable $throwable)
     {
-        $this->logger->critical($throwable->getMessage());
+        $this->logger->critical($throwable->getMessage(), [
+            'exception' => [
+                'code' => $throwable->getCode(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'trace' => explode("\n", $throwable->getTraceAsString()),
+            ],
+        ]);
 
         $status = $throwable->getCode() ?: 500;
 
         $body = json_encode([
             'status' => $status,
-            'message' => $throwable->getMessage()
+            'message' => $throwable->getMessage(),
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
         return $response
