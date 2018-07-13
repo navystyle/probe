@@ -1,6 +1,5 @@
 # project specific directory
 vendor/
-tmp/*
 config/settings.php
 generated-reversed-database/
 /composer.lock
