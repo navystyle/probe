@@ -1,15 +1,5 @@
 <?php
 
-use Monolog\Logger;
-use Propel\Runtime\Propel;
-
-/*$app->get('/users', function ($request, $response, $args) {
-    $user = UserQuery::create()
-        ->find();
-//    Propel::log('uh-oh, something went wrong with ' . $user, Logger::ERROR);
-    return $response->withJson($user->toArray());
-});*/
-
 $app->get('/', function ($request, $response, $args) {
 
     return $this->view->render($response, 'home.twig',

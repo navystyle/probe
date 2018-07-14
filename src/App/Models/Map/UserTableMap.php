@@ -39,7 +39,7 @@ class UserTableMap extends TableMap
     /**
      * The default database name for this class
      */
-    const DATABASE_NAME = 'tab';
+    const DATABASE_NAME = 'probe';
 
     /**
      * The table name for this class

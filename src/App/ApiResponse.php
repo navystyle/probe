@@ -1,27 +1,13 @@
 <?php
-namespace App\Controllers;
 
-use Ergy\Slim\Annotations\Controller as BaseController;
+namespace App;
+
+
 use Propel\Runtime\Util\PropelModelPager;
 use Slim\Http\Response;
 
-class Controller extends BaseController
+trait ApiResponse
 {
-    /**
-     * @param $key
-     * @param null $default
-     * @return mixed
-     */
-    public function getRequest($key, $default = null)
-    {
-        return $this->request->getParam($key) ?: $default;
-    }
-
-    public function getSettings($key)
-    {
-        return $this->settings[$key];
-    }
-
     /**
      * @param array $data
      * @param PropelModelPager|null $paginate
@@ -32,7 +18,7 @@ class Controller extends BaseController
     {
         $output = [
             'status' => 200,
-            'statusText' => 'OK',
+            'message' => 'OK',
             'data' => $data,
         ];
 
@@ -59,21 +45,18 @@ class Controller extends BaseController
             ];
         }
 
-        return $this->response->withJson($output, 200);
+        return $this->response->withHeader("Content-Type", "application/json")
+            ->withJson($output, 200);
     }
 
-    /**
-     * @param array $error
-     * @return Response
-     */
-    public function failToJson($error = [])
+    public function failToJson($message, $code = 500)
     {
         $output = [
-            'status' => 400,
-            'statusText' => 'FAIL',
-            'error' => $error,
+            'status' => $code,
+            'message' => $message,
         ];
 
-        return $this->response->withJson($output, 400);
+        return $this->response->withHeader("Content-Type", "application/json")
+            ->withJson($output, $code);
     }
 }

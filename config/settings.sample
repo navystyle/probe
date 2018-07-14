@@ -1,16 +1,24 @@
 <?php
 return [
+    'settings' => [
+        'determineRouteBeforeAppMiddleware' => true,
+        'displayErrorDetails' => true,
+        'logger' => [
+            'name' => 'slim',
+            'level' => Monolog\Logger::DEBUG,
+            'path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage/logs/slim.log',
+        ],
+        'default_limit' => 25,
+    ],
     'app' => [
-        'name' => 'TAB-tiny account bank',
-        'namespace' => 'tab',
-        'host' => 'tab.local',  //application hostname
+        'name' => 'probe',
+        'namespace' => 'probe',
+        'host' => 'probe.local',  //application hostname
         'port' => 80,   //Application web port
         'encoding' => ['mb_internal_encoding' => 'UTF-8', 'mb_http_output' => 'UTF-8'],
         'timezone' => 'Asia/Seoul', //Your timezone
         'root_dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR,
-        'tmp_dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR,
         'controller_dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'Controllers',
-        'router_cache_dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'cache_router',
         'template' => [
             'dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates',
             'cache' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'cache',
@@ -22,9 +30,12 @@ return [
             'port' => '3306',   //Database Port
             'username' => 'homestead',   //Database Username
             'password' => 'secret',   //Database Password
-            'name' => 'tab',  //Database name
+            'name' => 'probe',  //Database name
             'charset' => 'utf8' //Database charset
         ],
-        'default_limit' => 25,
+    ],
+    'jwt' => [
+        'secret' => 'supersecretkeyyoushouldnotcommittogithub',
+        'algorithm' => 'HS256',
     ],
 ];
