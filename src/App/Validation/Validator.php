@@ -3,12 +3,16 @@ namespace App\Validation;
 
 use Respect\Validation\Exceptions\NestedValidationException;
 use Slim\Http\Request;
-use Slim\Http\Response;
 
 class Validator
 {
     protected $errors = [];
 
+    /**
+     * @param Request $request
+     * @param array $rules
+     * @return $this
+     */
     public function validate(Request $request, array $rules)
     {
         foreach ($rules as $field => $rule) {

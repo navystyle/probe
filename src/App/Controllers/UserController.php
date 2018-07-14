@@ -18,6 +18,10 @@ class UserController extends Controller
 {
     use ApiResponse;
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function index(Request $request)
     {
         $users = UserQuery::create()
@@ -30,13 +34,19 @@ class UserController extends Controller
         );
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $id
+     * @return Response
+     */
     public function show(Request $request, Response $response, $id)
     {
         $user = UserQuery::create()
             ->findOneById($id);
 
         if (is_null($user)) {
-            throw new \Exception('empty data');
+            return $this->failToJson('empty data');
         }
 
         return $this->successToJson(
@@ -44,6 +54,11 @@ class UserController extends Controller
         );
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
     public function post(Request $request)
     {
         $validation = $this->validator->validate($request, [
