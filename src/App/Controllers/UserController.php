@@ -80,6 +80,9 @@ class UserController extends Controller
         return $this->successToJson(
             $user->toArray()
         );
+
+        // todo: https://packagist.org/packages/andrewdyer/slim3-mailer -> mailgun setting
+        // todo: jwt auth 적용해서 App::getUser() 비롯한 메소드 실행 가능하게 하기
     }
 
     public function update(Request $request, Response $response, $id)
