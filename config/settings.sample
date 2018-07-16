@@ -21,7 +21,7 @@ return [
         'controller_dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'Controllers',
         'template' => [
             'dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates',
-            'cache' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'cache',
+            'cache' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'cache',
             'debug' => true,
             'auto_reload' => true
         ],

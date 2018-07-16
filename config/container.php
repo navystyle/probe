@@ -65,7 +65,7 @@ $container['validator'] = function () {
 };
 
 # view
-/*$container['view'] = function ($container) use ($conf) {
+$container['view'] = function ($container) use ($conf) {
     $view = new \Slim\Views\Twig(
         $conf['app.template.dir'],
         [
@@ -87,6 +87,8 @@ $container['validator'] = function () {
 
     return $view;
 };
+
+# flash
 $container['flash'] = function () {
     return new \Slim\Flash\Messages();
-};*/
+};

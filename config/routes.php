@@ -10,6 +10,10 @@ foreach (Resolver::resolve($controllers) as $controller => $callback) {
     $container[$controller] = $callback;
 }
 
+$app->get('/', function () {
+    return 'probe';
+});
+
 $app->group('/api/users', function () use ($app) {
     $app->group('', function () {
         $this->get('', 'App\Controllers\UserController:index');
