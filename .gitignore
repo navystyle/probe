@@ -4,6 +4,7 @@ config/settings.php
 generated-reversed-database/
 /composer.lock
 *.bak
+storage/cache/*
 
 # editor specific directory
 .DS_STORE
