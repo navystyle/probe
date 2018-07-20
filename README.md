@@ -9,7 +9,7 @@
 3. `composer install`
  
 ### Migrating schema
-1. `./vendor/bin/propel database:revserse probe` create `schema.xml` into `/generated-reversed-database/`
+1. `./vendor/bin/propel database:reverse probe` create `schema.xml` into `/generated-reversed-database/`
 
 2. move the contents of `/generated-reversed-database/schema.xml` to `/propel/probe.schema.xml`
 

@@ -2,6 +2,7 @@
 
 namespace Base;
 
+use \User as ChildUser;
 use \UserQuery as ChildUserQuery;
 use \DateTime;
 use \Exception;
@@ -90,6 +91,21 @@ abstract class User implements ActiveRecordInterface
     protected $password;
 
     /**
+     * The value for the confirm_code field.
+     *
+     * @var        string
+     */
+    protected $confirm_code;
+
+    /**
+     * The value for the activated field.
+     *
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $activated;
+
+    /**
      * The value for the created_at field.
      *
      * @var        DateTime
@@ -112,10 +128,23 @@ abstract class User implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->activated = 0;
+    }
+
+    /**
      * Initializes internal state of Base\User object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -377,6 +406,26 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [confirm_code] column value.
+     *
+     * @return string
+     */
+    public function getConfirmCode()
+    {
+        return $this->confirm_code;
+    }
+
+    /**
+     * Get the [activated] column value.
+     *
+     * @return int
+     */
+    public function getActivated()
+    {
+        return $this->activated;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -497,6 +546,46 @@ abstract class User implements ActiveRecordInterface
     } // setPassword()
 
     /**
+     * Set the value of [confirm_code] column.
+     *
+     * @param string $v new value
+     * @return $this|\User The current object (for fluent API support)
+     */
+    public function setConfirmCode($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->confirm_code !== $v) {
+            $this->confirm_code = $v;
+            $this->modifiedColumns[UserTableMap::COL_CONFIRM_CODE] = true;
+        }
+
+        return $this;
+    } // setConfirmCode()
+
+    /**
+     * Set the value of [activated] column.
+     *
+     * @param int $v new value
+     * @return $this|\User The current object (for fluent API support)
+     */
+    public function setActivated($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->activated !== $v) {
+            $this->activated = $v;
+            $this->modifiedColumns[UserTableMap::COL_ACTIVATED] = true;
+        }
+
+        return $this;
+    } // setActivated()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
@@ -546,6 +635,10 @@ abstract class User implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->activated !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -584,13 +677,19 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('ConfirmCode', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->confirm_code = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('Activated', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->activated = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -603,7 +702,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\User'), 0, $e);
@@ -730,8 +829,21 @@ abstract class User implements ActiveRecordInterface
             $isInsert = $this->isNew();
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
+                // timestampable behavior
+                $time = time();
+                $highPrecision = \Propel\Runtime\Util\PropelDateTime::createHighPrecision();
+                if (!$this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
+                    $this->setCreatedAt($highPrecision);
+                }
+                if (!$this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
+                    $this->setUpdatedAt($highPrecision);
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
+                // timestampable behavior
+                if ($this->isModified() && !$this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
+                    $this->setUpdatedAt(\Propel\Runtime\Util\PropelDateTime::createHighPrecision());
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
@@ -816,6 +928,12 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD)) {
             $modifiedColumns[':p' . $index++]  = 'password';
         }
+        if ($this->isColumnModified(UserTableMap::COL_CONFIRM_CODE)) {
+            $modifiedColumns[':p' . $index++]  = 'confirm_code';
+        }
+        if ($this->isColumnModified(UserTableMap::COL_ACTIVATED)) {
+            $modifiedColumns[':p' . $index++]  = 'activated';
+        }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
@@ -844,6 +962,12 @@ abstract class User implements ActiveRecordInterface
                         break;
                     case 'password':
                         $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
+                        break;
+                    case 'confirm_code':
+                        $stmt->bindValue($identifier, $this->confirm_code, PDO::PARAM_STR);
+                        break;
+                    case 'activated':
+                        $stmt->bindValue($identifier, $this->activated, PDO::PARAM_INT);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -926,9 +1050,15 @@ abstract class User implements ActiveRecordInterface
                 return $this->getPassword();
                 break;
             case 4:
-                return $this->getCreatedAt();
+                return $this->getConfirmCode();
                 break;
             case 5:
+                return $this->getActivated();
+                break;
+            case 6:
+                return $this->getCreatedAt();
+                break;
+            case 7:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -964,15 +1094,17 @@ abstract class User implements ActiveRecordInterface
             $keys[1] => $this->getEmail(),
             $keys[2] => $this->getName(),
             $keys[3] => $this->getPassword(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpdatedAt(),
+            $keys[4] => $this->getConfirmCode(),
+            $keys[5] => $this->getActivated(),
+            $keys[6] => $this->getCreatedAt(),
+            $keys[7] => $this->getUpdatedAt(),
         );
-        if ($result[$keys[4]] instanceof \DateTimeInterface) {
-            $result[$keys[4]] = $result[$keys[4]]->format('c');
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('c');
         }
 
-        if ($result[$keys[5]] instanceof \DateTimeInterface) {
-            $result[$keys[5]] = $result[$keys[5]]->format('c');
+        if ($result[$keys[7]] instanceof \DateTimeInterface) {
+            $result[$keys[7]] = $result[$keys[7]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1026,9 +1158,15 @@ abstract class User implements ActiveRecordInterface
                 $this->setPassword($value);
                 break;
             case 4:
-                $this->setCreatedAt($value);
+                $this->setConfirmCode($value);
                 break;
             case 5:
+                $this->setActivated($value);
+                break;
+            case 6:
+                $this->setCreatedAt($value);
+                break;
+            case 7:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1070,10 +1208,16 @@ abstract class User implements ActiveRecordInterface
             $this->setPassword($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCreatedAt($arr[$keys[4]]);
+            $this->setConfirmCode($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUpdatedAt($arr[$keys[5]]);
+            $this->setActivated($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setCreatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setUpdatedAt($arr[$keys[7]]);
         }
     }
 
@@ -1127,6 +1271,12 @@ abstract class User implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserTableMap::COL_PASSWORD)) {
             $criteria->add(UserTableMap::COL_PASSWORD, $this->password);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_CONFIRM_CODE)) {
+            $criteria->add(UserTableMap::COL_CONFIRM_CODE, $this->confirm_code);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_ACTIVATED)) {
+            $criteria->add(UserTableMap::COL_ACTIVATED, $this->activated);
         }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
             $criteria->add(UserTableMap::COL_CREATED_AT, $this->created_at);
@@ -1223,6 +1373,8 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setEmail($this->getEmail());
         $copyObj->setName($this->getName());
         $copyObj->setPassword($this->getPassword());
+        $copyObj->setConfirmCode($this->getConfirmCode());
+        $copyObj->setActivated($this->getActivated());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         if ($makeNew) {
@@ -1264,10 +1416,13 @@ abstract class User implements ActiveRecordInterface
         $this->email = null;
         $this->name = null;
         $this->password = null;
+        $this->confirm_code = null;
+        $this->activated = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1296,6 +1451,20 @@ abstract class User implements ActiveRecordInterface
     public function __toString()
     {
         return (string) $this->exportTo(UserTableMap::DEFAULT_STRING_FORMAT);
+    }
+
+    // timestampable behavior
+
+    /**
+     * Mark the current object so that the update date doesn't get updated during next save
+     *
+     * @return     $this|ChildUser The current object (for fluent API support)
+     */
+    public function keepUpdateDateUnchanged()
+    {
+        $this->modifiedColumns[UserTableMap::COL_UPDATED_AT] = true;
+
+        return $this;
     }
 
     /**

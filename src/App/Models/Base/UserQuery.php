@@ -23,6 +23,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildUserQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildUserQuery orderByPassword($order = Criteria::ASC) Order by the password column
+ * @method     ChildUserQuery orderByConfirmCode($order = Criteria::ASC) Order by the confirm_code column
+ * @method     ChildUserQuery orderByActivated($order = Criteria::ASC) Order by the activated column
  * @method     ChildUserQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildUserQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
@@ -30,6 +32,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery groupByEmail() Group by the email column
  * @method     ChildUserQuery groupByName() Group by the name column
  * @method     ChildUserQuery groupByPassword() Group by the password column
+ * @method     ChildUserQuery groupByConfirmCode() Group by the confirm_code column
+ * @method     ChildUserQuery groupByActivated() Group by the activated column
  * @method     ChildUserQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildUserQuery groupByUpdatedAt() Group by the updated_at column
  *
@@ -48,6 +52,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
  * @method     ChildUser findOneByName(string $name) Return the first ChildUser filtered by the name column
  * @method     ChildUser findOneByPassword(string $password) Return the first ChildUser filtered by the password column
+ * @method     ChildUser findOneByConfirmCode(string $confirm_code) Return the first ChildUser filtered by the confirm_code column
+ * @method     ChildUser findOneByActivated(int $activated) Return the first ChildUser filtered by the activated column
  * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
  * @method     ChildUser findOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column *
 
@@ -58,6 +64,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByName(string $name) Return the first ChildUser filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByPassword(string $password) Return the first ChildUser filtered by the password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByConfirmCode(string $confirm_code) Return the first ChildUser filtered by the confirm_code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByActivated(int $activated) Return the first ChildUser filtered by the activated column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUpdatedAt(string $updated_at) Return the first ChildUser filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -66,6 +74,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
  * @method     ChildUser[]|ObjectCollection findByName(string $name) Return ChildUser objects filtered by the name column
  * @method     ChildUser[]|ObjectCollection findByPassword(string $password) Return ChildUser objects filtered by the password column
+ * @method     ChildUser[]|ObjectCollection findByConfirmCode(string $confirm_code) Return ChildUser objects filtered by the confirm_code column
+ * @method     ChildUser[]|ObjectCollection findByActivated(int $activated) Return ChildUser objects filtered by the activated column
  * @method     ChildUser[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUser objects filtered by the created_at column
  * @method     ChildUser[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildUser objects filtered by the updated_at column
  * @method     ChildUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -166,7 +176,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, email, name, password, created_at, updated_at FROM user WHERE id = :p0';
+        $sql = 'SELECT id, email, name, password, confirm_code, activated, created_at, updated_at FROM user WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -373,6 +383,72 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the confirm_code column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByConfirmCode('fooValue');   // WHERE confirm_code = 'fooValue'
+     * $query->filterByConfirmCode('%fooValue%', Criteria::LIKE); // WHERE confirm_code LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $confirmCode The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByConfirmCode($confirmCode = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($confirmCode)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_CONFIRM_CODE, $confirmCode, $comparison);
+    }
+
+    /**
+     * Filter the query on the activated column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByActivated(1234); // WHERE activated = 1234
+     * $query->filterByActivated(array(12, 34)); // WHERE activated IN (12, 34)
+     * $query->filterByActivated(array('min' => 12)); // WHERE activated > 12
+     * </code>
+     *
+     * @param     mixed $activated The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByActivated($activated = null, $comparison = null)
+    {
+        if (is_array($activated)) {
+            $useMinMax = false;
+            if (isset($activated['min'])) {
+                $this->addUsingAlias(UserTableMap::COL_ACTIVATED, $activated['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($activated['max'])) {
+                $this->addUsingAlias(UserTableMap::COL_ACTIVATED, $activated['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_ACTIVATED, $activated, $comparison);
+    }
+
+    /**
      * Filter the query on the created_at column
      *
      * Example usage:
@@ -533,6 +609,72 @@ abstract class UserQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // timestampable behavior
+
+    /**
+     * Filter by the latest updated
+     *
+     * @param      int $nbDays Maximum age of the latest update in days
+     *
+     * @return     $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function recentlyUpdated($nbDays = 7)
+    {
+        return $this->addUsingAlias(UserTableMap::COL_UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
+     * Order by update date desc
+     *
+     * @return     $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function lastUpdatedFirst()
+    {
+        return $this->addDescendingOrderByColumn(UserTableMap::COL_UPDATED_AT);
+    }
+
+    /**
+     * Order by update date asc
+     *
+     * @return     $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function firstUpdatedFirst()
+    {
+        return $this->addAscendingOrderByColumn(UserTableMap::COL_UPDATED_AT);
+    }
+
+    /**
+     * Order by create date desc
+     *
+     * @return     $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function lastCreatedFirst()
+    {
+        return $this->addDescendingOrderByColumn(UserTableMap::COL_CREATED_AT);
+    }
+
+    /**
+     * Filter by the latest created
+     *
+     * @param      int $nbDays Maximum age of in days
+     *
+     * @return     $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(UserTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
+     * Order by create date asc
+     *
+     * @return     $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function firstCreatedFirst()
+    {
+        return $this->addAscendingOrderByColumn(UserTableMap::COL_CREATED_AT);
     }
 
 } // UserQuery

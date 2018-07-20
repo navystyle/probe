@@ -4,12 +4,17 @@ namespace App\Controllers;
 
 use App\ApiResponse;
 use App\Controller;
+use App\Mailable\JoinConfirmMailable;
+use Map\UserTableMap;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\Propel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use User;
 use UserQuery;
 use Respect\Validation\Validator as v;
+use Util;
 
 /**
  * @property \App\Validation\Validator validator
@@ -71,17 +76,39 @@ class UserController extends Controller
             return $this->failToJson($validation->getErrors());
         }
 
-        $user = new User();
-        $user->setEmail($request->getParam('email'));
-        $user->setName($request->getParam('name'));
-        $user->setPassword(password_hash($request->getParam('password'), PASSWORD_BCRYPT));
-        $user->save();
+        $count = UserQuery::create()
+            ->filterByEmail($request->getParam('email'))
+            ->count();
+
+        if ($count > 0) {
+            return $this->failToJson('해당 이메일은 이미 존재합니다.');
+        }
+
+        $con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        try {
+            $confirmCode = Util::random(60);
+            $user = new User();
+            $user->setEmail($request->getParam('email'));
+            $user->setName($request->getParam('name'));
+            $user->setPassword(password_hash($request->getParam('password'), PASSWORD_BCRYPT));
+            $user->setConfirmCode($confirmCode);
+            $user->save($con);
+            $user->reload();
+
+            $this->mailer->setTo($user->getEmail(), $user->getName())->sendMessage(new JoinConfirmMailable($user));
+
+            $con->commit();
+        } catch (Exception $e) {
+            $con->rollBack();
+        }
 
         return $this->successToJson(
             $user->toArray()
         );
 
-        // todo: https://packagist.org/packages/andrewdyer/slim3-mailer -> mailgun setting
+        // todo: 메일이 안보내짐. 메일 보낼수있게 메일건 환경설정.
         // todo: jwt auth 적용해서 App::getUser() 비롯한 메소드 실행 가능하게 하기
     }
 

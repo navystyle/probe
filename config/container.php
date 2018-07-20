@@ -92,3 +92,20 @@ $container['view'] = function ($container) use ($conf) {
 $container['flash'] = function () {
     return new \Slim\Flash\Messages();
 };
+
+# mail
+$container['mailer'] = function($container) {
+    $twig = $container['view'];
+    $mailer = new \Anddye\Mailer\Mailer($twig, [
+        'host'      => 'smtp.mailgun.org',  // SMTP Host
+        'port'      => '587',  // SMTP Port
+        'username'  => 'postmaster@sandboxe54664b04f2146c4859c407b9d0212a8.mailgun.org',  // SMTP Username
+        'password'  => 'new1526615!',  // SMTP Password
+        'protocol'  => 'TLS'   // SSL or TLS
+    ]);
+
+    // Set the details of the default sender
+    $mailer->setDefaultFrom('realnavystyle@gmail.com', 'navy lab');
+
+    return $mailer;
+};

@@ -59,7 +59,7 @@ class UserTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
@@ -90,6 +90,16 @@ class UserTableMap extends TableMap
      * the column name for the password field
      */
     const COL_PASSWORD = 'user.password';
+
+    /**
+     * the column name for the confirm_code field
+     */
+    const COL_CONFIRM_CODE = 'user.confirm_code';
+
+    /**
+     * the column name for the activated field
+     */
+    const COL_ACTIVATED = 'user.activated';
 
     /**
      * the column name for the created_at field
@@ -113,11 +123,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Email', 'Name', 'Password', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'email', 'name', 'password', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_EMAIL, UserTableMap::COL_NAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'email', 'name', 'password', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id', 'Email', 'Name', 'Password', 'ConfirmCode', 'Activated', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'email', 'name', 'password', 'confirmCode', 'activated', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_EMAIL, UserTableMap::COL_NAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_CONFIRM_CODE, UserTableMap::COL_ACTIVATED, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'email', 'name', 'password', 'confirm_code', 'activated', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -127,11 +137,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Email' => 1, 'Name' => 2, 'Password' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'email' => 1, 'name' => 2, 'password' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_EMAIL => 1, UserTableMap::COL_NAME => 2, UserTableMap::COL_PASSWORD => 3, UserTableMap::COL_CREATED_AT => 4, UserTableMap::COL_UPDATED_AT => 5, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'email' => 1, 'name' => 2, 'password' => 3, 'created_at' => 4, 'updated_at' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Email' => 1, 'Name' => 2, 'Password' => 3, 'ConfirmCode' => 4, 'Activated' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'email' => 1, 'name' => 2, 'password' => 3, 'confirmCode' => 4, 'activated' => 5, 'createdAt' => 6, 'updatedAt' => 7, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_EMAIL => 1, UserTableMap::COL_NAME => 2, UserTableMap::COL_PASSWORD => 3, UserTableMap::COL_CONFIRM_CODE => 4, UserTableMap::COL_ACTIVATED => 5, UserTableMap::COL_CREATED_AT => 6, UserTableMap::COL_UPDATED_AT => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'email' => 1, 'name' => 2, 'password' => 3, 'confirm_code' => 4, 'activated' => 5, 'created_at' => 6, 'updated_at' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -155,6 +165,8 @@ class UserTableMap extends TableMap
         $this->addColumn('email', 'Email', 'VARCHAR', true, 255, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 16, null);
         $this->addColumn('password', 'Password', 'VARCHAR', true, 255, null);
+        $this->addColumn('confirm_code', 'ConfirmCode', 'VARCHAR', true, 60, null);
+        $this->addColumn('activated', 'Activated', 'TINYINT', false, null, 0);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -165,6 +177,19 @@ class UserTableMap extends TableMap
     public function buildRelations()
     {
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
+        );
+    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -311,6 +336,8 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
             $criteria->addSelectColumn(UserTableMap::COL_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_PASSWORD);
+            $criteria->addSelectColumn(UserTableMap::COL_CONFIRM_CODE);
+            $criteria->addSelectColumn(UserTableMap::COL_ACTIVATED);
             $criteria->addSelectColumn(UserTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(UserTableMap::COL_UPDATED_AT);
         } else {
@@ -318,6 +345,8 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.email');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.password');
+            $criteria->addSelectColumn($alias . '.confirm_code');
+            $criteria->addSelectColumn($alias . '.activated');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
         }
