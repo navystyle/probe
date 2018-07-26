@@ -37,7 +37,8 @@ class App
 
     public static function getUser()
     {
-        // getAttribute('token') -> id
+        // todo: getAttribute('token') -> id
+        // https://github.com/slimphp/Slim/issues/1750
         if (isset($_SESSION['user']) &&
             $_SESSION['user'] != '' &&
             ($user = UserQuery::create()->findOneByUUID($_SESSION['user']))

@@ -56,4 +56,29 @@ class AuthController extends Controller
         return $response->withHeader("Content-Type", "application/json")
             ->withJson($token, 200);
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $confirm_code
+     * @return Response
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function confirm(Request $request, Response $response, $confirm_code)
+    {
+        $user = UserQuery::create()
+            ->findOneByConfirmCode($confirm_code);
+
+        if (is_null($user)) {
+            return $this->failToJson('invalid confirm code');
+        }
+
+        $user->setActivated(true);
+        $user->setConfirmCode(null);
+        $user->save();
+
+        return $this->successToJson(
+            $user->toArray()
+        );
+    }
 }

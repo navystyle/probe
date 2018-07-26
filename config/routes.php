@@ -16,16 +16,20 @@ $app->get('/', function () {
 });
 
 /**
- *  API
+ *  API routes
  */
 $app->group('/api', function () use ($app) {
-    /** Confirm */
-    $app->get('/confirm/{confirm_code}', 'App\Controllers\UserController:confirm')->setName('confirm');
 
-    /** Login **/
-    $app->post('/login', 'App\Controllers\AuthController:login');
+    /** Auth (except jwt) **/
+    $app->group('/auth', function () {
+        /** Login **/
+        $this->post('/login', 'App\Controllers\AuthController:login');
 
-    /** User **/
+        /** Confirm */
+        $this->get('/confirm/{confirm_code}', 'App\Controllers\AuthController:confirm')->setName('confirm');
+    });
+
+    /** Users **/
     $app->group('/users', function () use ($app) {
         $app->group('', function () {
             $this->get('', 'App\Controllers\UserController:index');

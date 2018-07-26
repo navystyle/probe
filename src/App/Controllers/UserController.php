@@ -107,8 +107,6 @@ class UserController extends Controller
         return $this->successToJson(
             $user->toArray()
         );
-
-        // todo: jwt auth 적용해서 App::getUser() 비롯한 메소드 실행 가능하게 하기
     }
 
     public function update(Request $request, Response $response, $id)
@@ -121,28 +119,4 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param $confirm_code
-     * @return Response
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function confirm(Request $request, Response $response, $confirm_code)
-    {
-        $user = UserQuery::create()
-            ->findOneByConfirmCode($confirm_code);
-
-        if (is_null($user)) {
-            return $this->failToJson('invalid confirm code');
-        }
-
-        $user->setActivated(true);
-        $user->setConfirmCode(null);
-        $user->save();
-
-        return $this->successToJson(
-            $user->toArray()
-        );
-    }
 }

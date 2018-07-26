@@ -40,7 +40,7 @@ $container["phpErrorHandler"] = function ($container) {
 $container["JwtAuthentication"] = function ($container) use ($conf) {
     return new JwtAuthentication([
         'path' => '/api',
-        'ignore' => ['/api/login'],
+        'ignore' => ['/api/auth/'],
         'logger' => $container['logger'],
         'attribute' => 'token',
         'secret' => $conf['settings.jwt.secret'],
