@@ -22,10 +22,12 @@ class __TwigTemplate_72b4550c75f883c64a7248ff8647214c9c465be3ce36a6a6a15ab60a81f
         // line 1
         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, ($context["user"] ?? null), "name", array()), "html", null, true);
         echo "님, 환영합니다.
-가입 확인을 위해 브라우저에서 다음 주소를 열어 주세요:
-";
+<br>가입 확인을 위해 아래 승인 버튼을 클릭해 주세요.
+<br><a href=\"";
         // line 3
-        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, ($context["user"] ?? null), "confirm_code", array()), "html", null, true);
+        echo twig_escape_filter($this->env, $this->extensions['Slim\Views\TwigExtension']->baseUrl(), "html", null, true);
+        echo twig_escape_filter($this->env, $this->extensions['Slim\Views\TwigExtension']->pathFor("confirm", array("confirm_code" => twig_get_attribute($this->env, $this->source, ($context["user"] ?? null), "confirmCode", array()))), "html", null, true);
+        echo "\">[승인]</a>";
     }
 
     public function getTemplateName()
@@ -46,7 +48,7 @@ class __TwigTemplate_72b4550c75f883c64a7248ff8647214c9c465be3ce36a6a6a15ab60a81f
     public function getSourceContext()
     {
         return new Twig_Source("{{ user.name }}님, 환영합니다.
-가입 확인을 위해 브라우저에서 다음 주소를 열어 주세요:
-{{ user.confirm_code }}", "emails/join-confirm.twig", "/home/vagrant/work/probe/templates/emails/join-confirm.twig");
+<br>가입 확인을 위해 아래 승인 버튼을 클릭해 주세요.
+<br><a href=\"{{ base_url() }}{{ path_for('confirm', { 'confirm_code': user.confirmCode }) }}\">[승인]</a>", "emails/join-confirm.twig", "/home/vagrant/work/probe/templates/emails/join-confirm.twig");
     }
 }

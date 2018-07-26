@@ -38,4 +38,11 @@ return [
         'secret' => 'supersecretkeyyoushouldnotcommittogithub',
         'algorithm' => 'HS256',
     ],
+    'mail' => [
+        'host'      => 'smtp.mailgun.org',  // SMTP Host
+        'port'      => '587',  // SMTP Port
+        'username'  => 'postmaster@sandboxe54664b04f2146c4859c407b9d0212a8.mailgun.org',  // SMTP Username
+        'password'  => '8d2b06429864d52d1a15055aedea916d-8889127d-3c0edf9e',  // SMTP Password
+        'protocol'  => 'TLS'   // SSL or TLS
+    ]
 ];

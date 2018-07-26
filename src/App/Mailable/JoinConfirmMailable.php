@@ -21,7 +21,7 @@ class JoinConfirmMailable extends Mailable
     {
         $this->setSubject('[navy lab] 회원가입 확인 메일');
         $this->setView('emails/join-confirm.twig', [
-            'user' => $this->user
+            'user' => $this->user,
         ]);
 
         return $this;

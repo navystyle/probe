@@ -14,6 +14,8 @@ $app->get('/', function () {
     return 'probe';
 });
 
+$app->get('/confirm/{confirm_code}', 'App\Controllers\UserController:confirm')->setName('confirm');
+
 $app->group('/api/users', function () use ($app) {
     $app->group('', function () {
         $this->get('', 'App\Controllers\UserController:index');

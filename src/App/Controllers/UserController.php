@@ -108,7 +108,6 @@ class UserController extends Controller
             $user->toArray()
         );
 
-        // todo: 메일이 안보내짐. 메일 보낼수있게 메일건 환경설정.
         // todo: jwt auth 적용해서 App::getUser() 비롯한 메소드 실행 가능하게 하기
     }
 
@@ -120,5 +119,30 @@ class UserController extends Controller
     public function delete(Request $request, Response $response, $id)
     {
         //
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param $confirm_code
+     * @return Response
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function confirm(Request $request, Response $response, $confirm_code)
+    {
+        $user = UserQuery::create()
+            ->findOneByConfirmCode($confirm_code);
+
+        if (is_null($user)) {
+            return $this->failToJson('invalid confirm code');
+        }
+
+        $user->setActivated(true);
+        $user->setConfirmCode(null);
+        $user->save();
+
+        return $this->successToJson(
+            $user->toArray()
+        );
     }
 }
