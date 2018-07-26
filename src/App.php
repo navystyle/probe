@@ -37,6 +37,7 @@ class App
 
     public static function getUser()
     {
+        // getAttribute('token') -> id
         if (isset($_SESSION['user']) &&
             $_SESSION['user'] != '' &&
             ($user = UserQuery::create()->findOneByUUID($_SESSION['user']))

@@ -9,6 +9,10 @@ return [
             'path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage/logs/slim.log',
         ],
         'default_limit' => 25,
+        'jwt' => [
+            'secret' => 'supersecretkeyyoushouldnotcommittogithub',
+            'algorithm' => 'HS256',
+        ],
     ],
     'app' => [
         'name' => 'probe',
@@ -21,7 +25,7 @@ return [
         'controller_dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'Controllers',
         'template' => [
             'dir' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates',
-            'cache' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'cache',
+            'cache' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'cache',
             'debug' => true,
             'auto_reload' => true
         ],
@@ -33,9 +37,5 @@ return [
             'name' => 'probe',  //Database name
             'charset' => 'utf8' //Database charset
         ],
-    ],
-    'jwt' => [
-        'secret' => 'supersecretkeyyoushouldnotcommittogithub',
-        'algorithm' => 'HS256',
     ],
 ];

@@ -39,15 +39,15 @@ $container["phpErrorHandler"] = function ($container) {
 # jwt
 $container["JwtAuthentication"] = function ($container) use ($conf) {
     return new JwtAuthentication([
-        'path' => '/api2',
-//        'ignore' => ['/api/users/get-test', '/api/users/post-test'],
+        'path' => '/api',
+        'ignore' => ['/api/login'],
         'logger' => $container['logger'],
-        'attribute' => 'decoded_token_data',
-        'secret' => $conf['jwt.secret'],
+        'attribute' => 'token',
+        'secret' => $conf['settings.jwt.secret'],
         'secure' => true,
         'relaxed' => ['localhost', $conf['app.host']],
         'algorithm' => [
-            $conf['jwt.algorithm']
+            $conf['settings.jwt.algorithm']
         ],
         'error' => function ($response, $args) {
             $data["status"] = 403;
