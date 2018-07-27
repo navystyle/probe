@@ -1,6 +1,7 @@
 <?php
 
 use App\ApiErrorHandler;
+use App\Token;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
@@ -13,7 +14,7 @@ $container['logger'] = function () use ($conf) {
     $logger = new Logger($logger_conf['name']);
 
     $formatter = new LineFormatter(
-        "[%datetime%] [%level_name%]: %message% %context%\n",
+        '[%datetime%] [%level_name%]: %message% %context%\n',
         null,
         true,
         true
@@ -27,22 +28,27 @@ $container['logger'] = function () use ($conf) {
 };
 
 # error handler
-$container["errorHandler"] = function ($container) {
-    return new ApiErrorHandler($container["logger"]);
+$container['errorHandler'] = function ($container) {
+    return new ApiErrorHandler($container['logger']);
 };
 
 # php error handler
-$container["phpErrorHandler"] = function ($container) {
-    return $container["errorHandler"];
+$container['phpErrorHandler'] = function ($container) {
+    return $container['errorHandler'];
+};
+
+# token
+$container['token'] = function ($container) {
+    return new Token;
 };
 
 # jwt
-$container["JwtAuthentication"] = function ($container) use ($conf) {
+$container['JwtAuthentication'] = function ($container) use ($conf) {
     return new JwtAuthentication([
         'path' => '/api',
         'ignore' => ['/api/auth/'],
         'logger' => $container['logger'],
-        'attribute' => 'token',
+        'attribute' => false,
         'secret' => $conf['settings.jwt.secret'],
         'secure' => true,
         'relaxed' => ['localhost', $conf['app.host']],
@@ -50,12 +56,15 @@ $container["JwtAuthentication"] = function ($container) use ($conf) {
             $conf['settings.jwt.algorithm']
         ],
         'error' => function ($response, $args) {
-            $data["status"] = 403;
-            $data["message"] = $args["message"];
+            $data['status'] = 403;
+            $data['message'] = $args['message'];
             return $response
-                ->withHeader("Content-Type", "application/json")
+                ->withHeader('Content-Type', 'application/json')
                 ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
         },
+        'before' => function ($request, $arguments) use ($container) {
+            $container['token']->populate($arguments['decoded']);
+        }
     ]);
 };
 
@@ -83,7 +92,7 @@ $container['view'] = function ($container) use ($conf) {
     $view->addExtension(
         new Twig_Extension_Debug()
     );
-    $view->offsetSet('userGlobalData', App::getUser());
+    $view->offsetSet('userGlobalData', $container['token']->getUser());
 
     return $view;
 };
@@ -94,12 +103,12 @@ $container['flash'] = function () {
 };
 
 # mail
-$container['mailer'] = function($container) use ($conf) {
+$container['mailer'] = function ($container) use ($conf) {
     $twig = $container['view'];
     $mailer = new \Anddye\Mailer\Mailer($twig, $conf['mail']);
 
     // Set the details of the default sender
-    $mailer->setDefaultFrom('realnavystyle@gmail.com', 'navy lab');
+    $mailer->setDefaultFrom($conf['mail.from_email'], $conf['mail.from_name']);
 
     return $mailer;
 };

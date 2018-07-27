@@ -16,9 +16,6 @@ use UserQuery;
 use Respect\Validation\Validator as v;
 use Util;
 
-/**
- * @property \App\Validation\Validator validator
- */
 class UserController extends Controller
 {
     use ApiResponse;

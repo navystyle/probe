@@ -1,8 +1,9 @@
 <?php
 
-class App
-{
+use Slim\Http\Request;
 
+class AppCore
+{
     private static $_instance;
 
     public static function getInstance()
@@ -35,19 +36,6 @@ class App
         return '';
     }
 
-    public static function getUser()
-    {
-        // todo: getAttribute('token') -> id
-        // https://github.com/slimphp/Slim/issues/1750
-        if (isset($_SESSION['user']) &&
-            $_SESSION['user'] != '' &&
-            ($user = UserQuery::create()->findOneByUUID($_SESSION['user']))
-        ) {
-            return $user;
-        }
-        return null;
-    }
-
     public static function getProfile()
     {
         if (isset($_SESSION['user']) &&
@@ -59,24 +47,6 @@ class App
         return null;
     }
 
-    /**
-     * returns the database ID of the User
-     * @return int
-     */
-    public static function getUserId()
-    {
-        $user = self::getUser();
-        return $user ? $user->getId() : null;
-    }
-
-    /**
-     * returns true if the user is logged in
-     * @return bool
-     */
-    public static function userLoggedIn()
-    {
-        return self::getUserId() > 0;
-    }
 
     /**
      * returns the remote ip (client ip) of the user

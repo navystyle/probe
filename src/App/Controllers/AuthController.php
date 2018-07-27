@@ -5,15 +5,14 @@ namespace App\Controllers;
 use App\ApiResponse;
 use App\Controller;
 use DateTime;
+use Exception;
 use Firebase\JWT\JWT;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Respect\Validation\Validator as v;
 use UserQuery;
+use Util;
 
-/**
- * @property \App\Validation\Validator validator
- */
 class AuthController extends Controller
 {
     use ApiResponse;
@@ -36,22 +35,7 @@ class AuthController extends Controller
             return $this->failToJson('아이디 또는 패스워드가 일치하지 않습니다.');
         }
 
-        $now = new DateTime();
-        $future = new DateTime("now +2 hours");
-        $jti = base64_encode(md5($user->getId()));
-
-        $payload = [
-            "iat" => $now->getTimeStamp(),
-            "exp" => $future->getTimeStamp(),
-            "jti" => $jti,
-            "id" => $user->getId(),
-            "email" => $user->getEmail(),
-            "name" => $user->getName(),
-        ];
-
-        $token = [
-            'token' => JWT::encode($payload, $this->settings['jwt']['secret'], $this->settings['jwt']['algorithm'])
-        ];
+        $token = $this->tokenEncode($user->getId());
 
         return $response->withHeader("Content-Type", "application/json")
             ->withJson($token, 200);
@@ -70,7 +54,7 @@ class AuthController extends Controller
             ->findOneByConfirmCode($confirm_code);
 
         if (is_null($user)) {
-            return $this->failToJson('invalid confirm code');
+            return $this->failToJson('승인코드가 존재하지 않거나 일치하지 않습니다.');
         }
 
         $user->setActivated(true);
@@ -80,5 +64,57 @@ class AuthController extends Controller
         return $this->successToJson(
             $user->toArray()
         );
+    }
+
+    public function tokenRefresh(Request $request, Response $response)
+    {
+        if (is_null($request->getParam('token'))) {
+            return $this->failToJson('갱신하기 위한 토큰이 존재하지 않습니다.');
+        }
+
+        $decoded = $this->tokenDecode($request->getParam('token'));
+        $token = $this->tokenEncode($decoded['id']);
+
+        return $response->withHeader("Content-Type", "application/json")
+            ->withJson($token, 200);
+    }
+
+    private function tokenDecode($token)
+    {
+        try {
+            $decoded = JWT::decode(
+                $token,
+                $this->settings['jwt']['secret'],
+                (array) $this->settings['jwt']['algorithm']
+            );
+            return (array) $decoded;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    private function tokenEncode($userId)
+    {
+        $now = new DateTime();
+        $future = new DateTime("now +{$this->settings['jwt']['ttl']} hours");
+        $jti = Util::random(12);
+
+        $payload = [
+            "iat" => $now->getTimeStamp(),
+            "exp" => $future->getTimeStamp(),
+            "jti" => $jti,
+            "id" => $userId,
+        ];
+
+        $token = [
+            'token' => JWT::encode($payload, $this->settings['jwt']['secret'], $this->settings['jwt']['algorithm'])
+        ];
+
+        return $token;
+    }
+
+    public function logout()
+    {
+        $this->token->unsetToken();
     }
 }

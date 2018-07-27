@@ -25,8 +25,14 @@ $app->group('/api', function () use ($app) {
         /** Login **/
         $this->post('/login', 'App\Controllers\AuthController:login');
 
-        /** Confirm */
+        /** Logout **/
+        $this->get('/logout', 'App\Controllers\AuthController:logout');
+
+        /** Confirm **/
         $this->get('/confirm/{confirm_code}', 'App\Controllers\AuthController:confirm')->setName('confirm');
+
+        /** refresh token **/
+        $this->post('/token-refresh', 'App\Controllers\AuthController:tokenRefresh');
     });
 
     /** Users **/
