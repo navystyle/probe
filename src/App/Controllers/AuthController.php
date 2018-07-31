@@ -66,6 +66,12 @@ class AuthController extends Controller
         );
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     * @throws Exception
+     */
     public function tokenRefresh(Request $request, Response $response)
     {
         if (is_null($request->getParam('token'))) {
@@ -79,6 +85,11 @@ class AuthController extends Controller
             ->withJson($token, 200);
     }
 
+    /**
+     * @param $token
+     * @return array
+     * @throws Exception
+     */
     private function tokenDecode($token)
     {
         try {
