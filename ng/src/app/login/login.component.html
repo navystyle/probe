@@ -1,3 +1,23 @@
-<p>
-  login works!
-</p>
+<div class="row">
+    <div class="mx-auto">
+        <form clrForm [formGroup]="formGroup" (ngSubmit)="submit()">
+            <clr-input-container>
+                <input clrInput type="text" formControlName="email" placeholder="email"/>
+                <clr-control-error>email is required.</clr-control-error>
+            </clr-input-container>
+
+            <clr-input-container>
+                <input clrInput type="password" formControlName="password" placeholder="password"/>
+                <clr-control-error>password is required.</clr-control-error>
+            </clr-input-container>
+
+            <button
+                type="submit"
+                class="btn btn-primary btn-block mt-1"
+                [clrLoading]="state"
+                [disabled]="!validate(formGroup)">login
+            </button>
+            <button class="btn btn-sm btn-link btn-block">sign up</button>
+        </form>
+    </div>
+</div>
