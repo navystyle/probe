@@ -35,6 +35,10 @@ class AuthController extends Controller
             return $this->failToJson('아이디 또는 패스워드가 일치하지 않습니다.');
         }
 
+        if (!$user->getActivated()) {
+            return $this->failToJson('아직 승인받지 않은 상태입니다. 이메일을 확인해주세요.');
+        }
+
         $token = $this->tokenEncode($user->getId());
 
         return $response->withHeader("Content-Type", "application/json")

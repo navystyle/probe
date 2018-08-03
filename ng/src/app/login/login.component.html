@@ -1,5 +1,7 @@
 <div class="row">
     <div class="mx-auto">
+        <alert-error [error]="error" [small]="true"></alert-error>
+
         <form clrForm [formGroup]="formGroup" (ngSubmit)="submit()">
             <clr-input-container>
                 <input clrInput type="text" formControlName="email" placeholder="email"/>

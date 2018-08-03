@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
+import {BaseService} from "./base.service";
+import {environment} from "../../../environments/environment";
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseService {
 
-    constructor() {
-        console.log('user service loaded!');
-    }
+    apiUrl: string = `${environment.apiUrl}/users`;
 }

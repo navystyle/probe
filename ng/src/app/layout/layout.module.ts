@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HeaderComponent} from './header/header.component';
-import {SidebarComponent} from './sidebar/sidebar.component';
 import {ClarityModule, ClrFormsNextModule} from "@clr/angular";
 
 @NgModule({
@@ -11,9 +10,11 @@ import {ClarityModule, ClrFormsNextModule} from "@clr/angular";
         ClrFormsNextModule,
     ],
     exports: [
-        HeaderComponent, SidebarComponent
+        HeaderComponent,
     ],
-    declarations: [HeaderComponent, SidebarComponent]
+    declarations: [
+        HeaderComponent,
+    ]
 })
 export class LayoutModule {
 }

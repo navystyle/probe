@@ -1,0 +1,9 @@
+<clr-alert [clrAlertType]="type" [clrAlertSizeSmall]="small" *ngIf="errorList.length > 0">
+    <div class="alert-item">
+        <span class="alert-text">
+            <ng-container *ngFor="let error of errorList">
+                {{ error }}
+            </ng-container>
+        </span>
+    </div>
+</clr-alert>
