@@ -1,4 +1,7 @@
-<clr-alert [clrAlertType]="type" [clrAlertSizeSmall]="small" *ngIf="errorList.length > 0">
+<clr-alert
+        *ngIf="errorList.length > 0 && type === TYPES_ALERT"
+        [clrAlertType]="alert"
+        [clrAlertSizeSmall]="small">
     <div class="alert-item">
         <span class="alert-text">
             <ng-container *ngFor="let error of errorList">
@@ -7,3 +10,21 @@
         </span>
     </div>
 </clr-alert>
+
+<clr-modal
+        *ngIf="errorList.length > 0 && type === TYPES_MODAL"
+        [(clrModalOpen)]="opened"
+        [clrModalSize]="small ? 'sm' : null">
+    <h6 class="modal-title">에러</h6>
+    <div class="modal-body">
+        <clr-alert [clrAlertType]="alert" [clrAlertClosable]="false">
+            <div class="alert-item">
+                <span class="alert-text">
+                    <ng-container *ngFor="let error of errorList">
+                        {{ error }}
+                    </ng-container>
+                </span>
+            </div>
+        </clr-alert>
+    </div>
+</clr-modal>
