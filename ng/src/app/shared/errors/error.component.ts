@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Error} from "../../core/models/error";
 
 @Component({
-    selector: 'alert-error',
+    selector: 'shared-error',
     templateUrl: './error.component.html'
 })
 export class ErrorComponent {

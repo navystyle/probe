@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormControlName, FormGroup, Validators} from "@angular/forms";
 import {ClrLoadingState} from "@clr/angular";
 import {AuthService} from "../core/services/auth.service";
 
@@ -26,19 +26,24 @@ export class LoginComponent {
 
         this.authService.login(this.formGroup.getRawValue())
             .subscribe(
-                res => console.log(res),
-                error => this.afterError(error)
+                res => this.afterSuccess(res),
+                err => this.afterError(err)
             );
 
         // login logic
         // this.state = ClrLoadingState.DEFAULT;
     }
 
-    afterError(error: Error) {
-        this.state = ClrLoadingState.DEFAULT;
-        this.error = error;
+    afterSuccess(res: any) {
+        console.log(res);
     }
 
+    afterError(err: Error) {
+        this.state = ClrLoadingState.DEFAULT;
+        this.error = err;
+    }
+
+    // 안쓰고있음
     validate(formGroup: FormGroup): boolean {
         for (let property in formGroup.controls) {
             if (formGroup.controls.hasOwnProperty(property)) {
@@ -51,6 +56,10 @@ export class LoginComponent {
         }
 
         return formGroup.valid;
+    }
+
+    invalid(control: FormControl): boolean {
+        return control.invalid && (control.dirty || control.touched)
     }
 
     // todo: 로그인성공 후 리다이렉트

@@ -1,25 +1,42 @@
-<div class="row">
-    <div class="mx-auto">
-        <alert-error [error]="error" [small]="true"></alert-error>
+<div class="clr-row clr-justify-content-center">
+    <form [formGroup]="formGroup"
+          (ngSubmit)="submit()"
+          class="clr-form clr-col-sm-5 clr-col-md-5 clr-col-lg-4">
+        <div class="clr-form-control">
+            <div class="clr-control-container clr-break-row">
+                <label class="tooltip tooltip-right tooltip-validation tooltip-xs clr-break-row"
+                       [class.invalid]="invalid(formGroup.get('email'))">
+                    <input class="clr-input clr-break-row" type="text" formControlName="email" placeholder="email">
+                    <span class="tooltip-content">
+                        필수
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="clr-form-control mb-1">
+            <div class="clr-control-container clr-break-row">
+                <label class="tooltip tooltip-right tooltip-validation tooltip-xs clr-break-row"
+                       [class.invalid]="invalid(formGroup.get('password'))">
+                    <input class="clr-input clr-break-row" type="password" formControlName="password" placeholder="password">
+                    <span class="tooltip-content">
+                        필수
+                    </span>
+                </label>
+            </div>
+        </div>
 
-        <form clrForm [formGroup]="formGroup" (ngSubmit)="submit()">
-            <clr-input-container>
-                <input clrInput type="text" formControlName="email" placeholder="email"/>
-                <clr-control-error>email is required.</clr-control-error>
-            </clr-input-container>
+        <shared-error [error]="error" [small]="true"></shared-error>
 
-            <clr-input-container>
-                <input clrInput type="password" formControlName="password" placeholder="password"/>
-                <clr-control-error>password is required.</clr-control-error>
-            </clr-input-container>
-
-            <button
+        <button
                 type="submit"
-                class="btn btn-primary btn-block mt-1"
+                class="btn btn-primary btn-block"
                 [clrLoading]="state"
-                [disabled]="!validate(formGroup)">login
-            </button>
-            <button class="btn btn-sm btn-link btn-block">sign up</button>
-        </form>
-    </div>
+                [disabled]="formGroup.invalid">login
+        </button>
+        <button class="btn btn-sm btn-link btn-block">sign up</button>
+
+        <!--todo: https://github.com/gothinkster/angular-realworld-example-app/blob/master/src/app/shared/show-authed.directive.ts-->
+        <!--todo: volvo ui select [(control)] 참고해서 라벨에 컨트롤 주입시킨후 invalid 처리하기-->
+        <!--todo: e.g. *isInvalid="formGroup.get('email') || formGroup.controls.email"-->
+    </form>
 </div>
