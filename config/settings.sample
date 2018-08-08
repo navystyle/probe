@@ -40,12 +40,22 @@ return [
         ],
     ],
     'mail' => [
-        'host'      => 'smtp.mailgun.org',  // SMTP Host
-        'port'      => '587',  // SMTP Port
-        'username'  => 'postmaster@sandboxe54664b04f2146c4859c407b9d0212a8.mailgun.org',  // SMTP Username
-        'password'  => '8d2b06429864d52d1a15055aedea916d-8889127d-3c0edf9e',  // SMTP Password
-        'protocol'  => 'TLS',   // SSL or TLS
+        'host'       => 'smtp.gmail.com',  // SMTP Host
+        'port'       => '587',  // SMTP Port
+        'username'   => 'realnavystyle@gmail.com',
+        'password'   => 'new15266',
+        'protocol'   => 'TLS',   // SSL or TLS
         'from_email' => 'realnavystyle@gmail.com',
-        'from_name' => 'navy lab',
+        'from_name'  => 'navy lab',
+
+        /* mailgun - realnavystyle@gmail.com
+         * 'username'  => 'postmaster@sandboxe54664b04f2146c4859c407b9d0212a8.mailgun.org',  // SMTP Username
+         * 'password'  => 'realnavystyle',  // SMTP Password
+         */
+
+        /* mailgun - navystyle@naver.com
+         * 'username'  => 'postmaster@sandbox50366ea3c7114d60852251fd5f5b31d8.mailgun.org',  // SMTP Username
+         * 'password'  => '418f2771d4b85474b0c51ecee7a10afd',  // SMTP Password
+         */
     ]
 ];

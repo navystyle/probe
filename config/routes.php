@@ -22,6 +22,9 @@ $app->group('/api', function () use ($app) {
 
     /** Auth (except jwt) **/
     $app->group('/auth', function () {
+        /** Register **/
+        $this->post('', 'App\Controllers\AuthController:store');
+
         /** Login **/
         $this->post('/login', 'App\Controllers\AuthController:login');
 
@@ -29,7 +32,7 @@ $app->group('/api', function () use ($app) {
         $this->get('/logout', 'App\Controllers\AuthController:logout');
 
         /** Confirm **/
-        $this->get('/confirm/{confirm_code}', 'App\Controllers\AuthController:confirm')->setName('confirm');
+        $this->get('/confirm/{confirm_code}', 'App\Controllers\AuthController:confirm');
 
         /** refresh token **/
         $this->post('/token-refresh', 'App\Controllers\AuthController:tokenRefresh');
@@ -39,7 +42,6 @@ $app->group('/api', function () use ($app) {
     $app->group('/users', function () use ($app) {
         $app->group('', function () {
             $this->get('', 'App\Controllers\UserController:index');
-            $this->post('', 'App\Controllers\UserController:post');
         });
 
         $app->group('/{id:[0-9]+}', function () {

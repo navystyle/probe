@@ -17,6 +17,10 @@ export class AuthService {
         return localStorage.getItem('token');
     }
 
+    setToken(token: any) {
+        localStorage.setItem('token', token);
+    }
+
     isAuthenticated(): boolean {
         let token = localStorage.getItem('token');
 
@@ -28,7 +32,7 @@ export class AuthService {
     login(body: Object = {}) {
         return this.http.post(`${this.apiUrl}/login`, JSON.stringify(body))
             .pipe(map(data => {
-                console.log(data); // todo: 가다듬기
+                this.setToken(data)
             }))
     }
 }

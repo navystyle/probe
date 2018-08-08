@@ -36,6 +36,8 @@ export class LoginComponent {
 
     afterSuccess(res: any) {
         console.log(res);
+        // todo: 로그인성공 후 리다이렉트
+        // https://gnomeontherun.com/2017/03/02/guards-and-login-redirects-in-angular/
     }
 
     afterError(err: Error) {
@@ -61,7 +63,4 @@ export class LoginComponent {
     invalid(control: FormControl): boolean {
         return control.invalid && (control.dirty || control.touched)
     }
-
-    // todo: 로그인성공 후 리다이렉트
-    // https://gnomeontherun.com/2017/03/02/guards-and-login-redirects-in-angular/
 }

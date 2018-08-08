@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <error [error]="error" [small]="true" [type]="'modal'" [alert]="'warning'"></error>
+        <error [error]="error" [small]="true"></error>
 
         <button
                 type="submit"
@@ -36,7 +36,6 @@
         <button class="btn btn-sm btn-link btn-block">sign up</button>
 
         <!--todo: https://github.com/gothinkster/angular-realworld-example-app/blob/master/src/app/shared/show-authed.directive.ts-->
-        <!--todo: volvo ui select [(control)] 참고해서 라벨에 컨트롤 주입시킨후 invalid 처리하기-->
         <!--todo: e.g. *isInvalid="formGroup.get('email') || formGroup.controls.email"-->
     </form>
 </div>
