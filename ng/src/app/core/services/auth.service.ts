@@ -35,4 +35,8 @@ export class AuthService {
                 this.setToken(data)
             }))
     }
+
+    logout() {
+        localStorage.removeItem('token');
+    }
 }

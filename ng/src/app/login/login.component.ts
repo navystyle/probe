@@ -1,13 +1,14 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormControlName, FormGroup, Validators} from "@angular/forms";
 import {ClrLoadingState} from "@clr/angular";
 import {AuthService} from "../core/services/auth.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
     formGroup = new FormGroup({
         email: new FormControl('', Validators.required),
@@ -16,8 +17,16 @@ export class LoginComponent {
 
     state: ClrLoadingState = ClrLoadingState.DEFAULT;
     error = {};
+    returnUrl: string;
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService,
+                private route: ActivatedRoute,
+                private router: Router) {
+    }
+
+    ngOnInit() {
+        this.authService.logout();
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
     submit() {
@@ -35,9 +44,7 @@ export class LoginComponent {
     }
 
     afterSuccess(res: any) {
-        console.log(res);
-        // todo: 로그인성공 후 리다이렉트
-        // https://gnomeontherun.com/2017/03/02/guards-and-login-redirects-in-angular/
+        this.router.navigate([this.returnUrl]);
     }
 
     afterError(err: Error) {
