@@ -25,6 +25,7 @@ class AuthController extends Controller
      * @param Request $request
      * @return Response
      * @throws \Propel\Runtime\Exception\PropelException
+     * @throws Exception
      */
     public function store(Request $request)
     {
