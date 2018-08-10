@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {UserService} from "./services/user.service";
 import {AuthService} from "./services/auth.service";
@@ -6,6 +6,8 @@ import {AuthGuardService} from "./services/auth-guard.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {JwtModule} from "@auth0/angular-jwt";
 import {JwtInterceptor} from "./interceptor/jwt.interceptor";
+import {ErrorService} from "./services/error.service";
+import {ErrorsHandler} from "./errors-handler/errors-handler";
 
 @NgModule({
     imports: [
@@ -23,6 +25,11 @@ import {JwtInterceptor} from "./interceptor/jwt.interceptor";
             useClass: JwtInterceptor,
             multi: true
         },
+        {
+            provide: ErrorHandler,
+            useClass: ErrorsHandler,
+        },
+        ErrorService,
         UserService,
         AuthService,
         AuthGuardService,

@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {FormControl, FormControlName, FormGroup, Validators} from "@angular/forms";
 import {ClrLoadingState} from "@clr/angular";
 import {AuthService} from "../core/services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ErrorService} from "../core/services/error.service";
 
 @Component({
     selector: 'app-login',
@@ -21,7 +22,27 @@ export class LoginComponent implements OnInit {
 
     constructor(private authService: AuthService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                private errorService: ErrorService,
+                private _ngZone: NgZone) {
+
+        /*this.errorService.error$.subscribe(
+            err => {
+                console.log(err);
+                this.error = err;
+            }
+        );*/
+
+        this.errorService.error$.subscribe(
+            err => {
+                this._ngZone.run(() => {
+                    this.error = err;
+                });
+            }
+        );
+
+        // todo: ngZone 대체할 방법 찾아보기
+        // todo: base component extend 시키기 (에러, 라우터 등)
     }
 
     ngOnInit() {
@@ -36,20 +57,15 @@ export class LoginComponent implements OnInit {
         this.authService.login(this.formGroup.getRawValue())
             .subscribe(
                 res => this.afterSuccess(res),
-                err => this.afterError(err)
+                err => {
+                    this.state = ClrLoadingState.DEFAULT;
+                    throw err;
+                }
             );
-
-        // login logic
-        // this.state = ClrLoadingState.DEFAULT;
     }
 
     afterSuccess(res: any) {
         this.router.navigate([this.returnUrl]);
-    }
-
-    afterError(err: Error) {
-        this.state = ClrLoadingState.DEFAULT;
-        this.error = err;
     }
 
     // 안쓰고있음

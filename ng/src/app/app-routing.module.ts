@@ -8,6 +8,7 @@ const rootPath: string = 'src/app';
 const routes: Routes = [
     { pathMatch: 'full', path: '', component: AppComponent, canActivate: [AuthGuard] },
     { pathMatch: 'full', path: 'login', loadChildren: `${rootPath}/login/login.module#LoginModule` },
+    { path: 'confirm', loadChildren: `${rootPath}/confirm/confirm.module#ConfirmModule` },
     { pathMatch: 'full', path: 'task', canActivate: [AuthGuard], loadChildren: `${rootPath}/task/task.module#TaskModule` },
     { pathMatch: 'full', path: '**', component: PageNotFoundComponent }
 ];
