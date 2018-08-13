@@ -165,7 +165,7 @@ class UserTableMap extends TableMap
         $this->addColumn('email', 'Email', 'VARCHAR', true, 255, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 16, null);
         $this->addColumn('password', 'Password', 'VARCHAR', true, 255, null);
-        $this->addColumn('confirm_code', 'ConfirmCode', 'VARCHAR', true, 60, null);
+        $this->addColumn('confirm_code', 'ConfirmCode', 'VARCHAR', false, 60, null);
         $this->addColumn('activated', 'Activated', 'TINYINT', false, null, 0);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);

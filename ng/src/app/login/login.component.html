@@ -33,9 +33,6 @@
                 [clrLoading]="state"
                 [disabled]="formGroup.invalid">login
         </button>
-        <button class="btn btn-sm btn-link btn-block">sign up</button>
-
-        <!--todo: https://github.com/gothinkster/angular-realworld-example-app/blob/master/src/app/shared/show-authed.directive.ts-->
-        <!--todo: e.g. *isInvalid="formGroup.get('email') || formGroup.controls.email"-->
+        <button class="btn btn-sm btn-link btn-block" routerLink="/register">sign up</button>
     </form>
 </div>

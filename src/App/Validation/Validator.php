@@ -28,7 +28,7 @@ class Validator
 
     public function getErrors()
     {
-        return $this->errors;
+        return join(" / ", $this->errors);
     }
 
     public function failed()

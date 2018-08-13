@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Subject} from "rxjs/index";
+import {Error} from "../models/error";
 
 @Injectable()
 export class ErrorService {

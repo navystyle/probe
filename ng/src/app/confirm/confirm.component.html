@@ -4,13 +4,28 @@
             <div class="card-block">
                 <error [error]="error" [small]="true"></error>
 
-                <h4 class="card-title">가입승인</h4>
-                <p class="card-text">
+                <h4 class="card-title">
+                    가입승인
+                    <clr-icon shape="success-standard" class="is-success" size="21" *ngIf="success"></clr-icon>
+                </h4>
+                <p class="card-text" *ngIf="!success">
                     안녕하세요. 아래 버튼을 누르면 가입이 승인되며 로그인 페이지로 이동합니다.
+                </p>
+
+                <p class="card-text" *ngIf="success">
+                    {{user.Name}}님 안녕하세요! 가입이 승인되었습니다.
                 </p>
             </div>
             <div class="card-footer">
-                <a class="btn btn-primary">승인</a>
+                <button
+                        *ngIf="!success"
+                        type="button"
+                        class="btn btn-primary"
+                        (click)="submit()"
+                        [clrLoading]="state">승인
+                </button>
+
+                <a href="/" *ngIf="success">홈으로</a>
             </div>
         </div>
     </div>

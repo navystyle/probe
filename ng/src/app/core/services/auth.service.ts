@@ -1,16 +1,17 @@
 import {Injectable} from '@angular/core';
 import {JwtHelperService} from "@auth0/angular-jwt";
-import {HttpClient} from "@angular/common/http";
-import {environment} from "../../../environments/environment";
 import {map} from "rxjs/internal/operators";
+import {BaseService} from "./base.service";
+import {Router} from "@angular/router";
 
 @Injectable()
 export class AuthService {
 
-    apiUrl: string = `${environment.apiUrl}/auth`;
+    apiUrl: string = '/auth';
 
     constructor(private jwtHelper: JwtHelperService,
-                private http: HttpClient) {
+                private baseService: BaseService,
+                private router: Router) {
     }
 
     getToken(): string {
@@ -23,20 +24,23 @@ export class AuthService {
 
     isAuthenticated(): boolean {
         let token = localStorage.getItem('token');
-
-        // Check whether the token is expired and return
-        // true or false
         return !this.jwtHelper.isTokenExpired(token);
     }
 
-    login(body: Object = {}) {
-        return this.http.post(`${this.apiUrl}/login`, JSON.stringify(body))
+    login(credentials: any) {
+        return this.baseService.post(`${this.apiUrl}/login`, credentials)
             .pipe(map(data => {
-                this.setToken(data)
-            }))
+                this.setToken(data.token)
+            }));
+    }
+
+    confirm(confirmCode: string) {
+        return this.baseService.post(`${this.apiUrl}/confirm`, {confirmCode: confirmCode})
+            .pipe(map(data => data.data));
     }
 
     logout() {
         localStorage.removeItem('token');
+        this.router.navigate(['login']);
     }
 }

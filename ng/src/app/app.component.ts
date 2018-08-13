@@ -7,14 +7,14 @@ import {AuthService} from "./core/services/auth.service";
 })
 export class AppComponent implements OnInit {
     title = 'probe';
-    user: boolean = false;
 
     constructor(private authService: AuthService) {
     }
 
     ngOnInit(): void {
-        if (this.authService.isAuthenticated()) {
-            this.user = true;
-        }
+    }
+
+    isAuthenticated() {
+        return this.authService.isAuthenticated();
     }
 }

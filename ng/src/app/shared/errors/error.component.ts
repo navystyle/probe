@@ -45,8 +45,8 @@ export class ErrorComponent {
 
     @Input()
     set error(error: Error) {
-        this.formattedErrors = Object.keys(error.error || {})
-            .map(key => key === 'status' ? `[${error.error[key]}]` : `${error.error[key]}`);
+        this.formattedErrors = Object.keys(error || {})
+            .map(key => key === 'status' ? `[${error[key]}]` : `${error[key]}`);
 
         if (this.type === Types.modal) {
             this.opened = true;

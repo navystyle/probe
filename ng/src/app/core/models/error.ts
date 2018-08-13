@@ -1,3 +1,4 @@
 export interface Error {
-    error: {[key: string]: string};
+    status: number;
+    message: string;
 }

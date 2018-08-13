@@ -33,6 +33,7 @@ class AuthController extends Controller
             'email' => v::notEmpty()->noWhitespace()->email(),
             'name' => v::notEmpty()->stringType()->length(4, 20)->alnum(),
             'password' => v::notEmpty()->length(4, null),
+            'password_confirm' => v::equals($request->getParam('password')),
         ]);
 
         if ($validation->failed()) {
@@ -104,14 +105,13 @@ class AuthController extends Controller
     /**
      * @param Request $request
      * @param Response $response
-     * @param $confirm_code
      * @return Response
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function confirm(Request $request, Response $response, $confirm_code)
+    public function confirm(Request $request, Response $response)
     {
         $user = UserQuery::create()
-            ->findOneByConfirmCode($confirm_code);
+            ->findOneByConfirmCode($request->getParam('confirmCode'));
 
         if (is_null($user)) {
             return $this->failToJson('승인코드가 존재하지 않거나 일치하지 않습니다.');

@@ -8,6 +8,7 @@ import {JwtModule} from "@auth0/angular-jwt";
 import {JwtInterceptor} from "./interceptor/jwt.interceptor";
 import {ErrorService} from "./services/error.service";
 import {ErrorsHandler} from "./errors-handler/errors-handler";
+import {BaseService} from "./services/base.service";
 
 @NgModule({
     imports: [
@@ -29,6 +30,7 @@ import {ErrorsHandler} from "./errors-handler/errors-handler";
             provide: ErrorHandler,
             useClass: ErrorsHandler,
         },
+        BaseService,
         ErrorService,
         UserService,
         AuthService,

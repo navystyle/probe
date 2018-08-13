@@ -1,15 +1,16 @@
 import {Component, NgZone, OnInit} from '@angular/core';
-import {FormControl, FormControlName, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ClrLoadingState} from "@clr/angular";
 import {AuthService} from "../core/services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ErrorService} from "../core/services/error.service";
+import {BaseComponent} from "../bases/base.component";
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaseComponent implements OnInit {
 
     formGroup = new FormGroup({
         email: new FormControl('', Validators.required),
@@ -17,32 +18,15 @@ export class LoginComponent implements OnInit {
     });
 
     state: ClrLoadingState = ClrLoadingState.DEFAULT;
-    error = {};
     returnUrl: string;
 
-    constructor(private authService: AuthService,
-                private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
                 private router: Router,
                 private errorService: ErrorService,
-                private _ngZone: NgZone) {
-
-        /*this.errorService.error$.subscribe(
-            err => {
-                console.log(err);
-                this.error = err;
-            }
-        );*/
-
-        this.errorService.error$.subscribe(
-            err => {
-                this._ngZone.run(() => {
-                    this.error = err;
-                });
-            }
-        );
-
-        // todo: ngZone 대체할 방법 찾아보기
-        // todo: base component extend 시키기 (에러, 라우터 등)
+                private ngZone: NgZone,
+                private authService: AuthService,
+                ) {
+        super(errorService, ngZone);
     }
 
     ngOnInit() {
