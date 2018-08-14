@@ -33,6 +33,11 @@
                 [clrLoading]="state"
                 [disabled]="formGroup.invalid">login
         </button>
-        <button class="btn btn-sm btn-link btn-block" routerLink="/register">sign up</button>
+        <button type="button" class="btn btn-sm btn-link btn-block" (click)="openWizard()">sign up</button>
     </form>
 </div>
+
+<register-wizard
+        *ngIf="initWizard"
+        #registerWizard
+        (closed)="initWizard = false"></register-wizard>

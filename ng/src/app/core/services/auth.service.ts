@@ -39,6 +39,11 @@ export class AuthService {
             .pipe(map(data => data.data));
     }
 
+    register(credentials: any) {
+        return this.baseService.post(this.apiUrl, credentials)
+            .pipe(map(data => data.data));
+    }
+
     logout() {
         localStorage.removeItem('token');
         this.router.navigate(['login']);

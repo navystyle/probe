@@ -42,7 +42,7 @@ export class ConfirmComponent extends BaseComponent {
 
     afterSuccess(res: any) {
         this.user = res;
-        this.success = true;
         this.state = ClrLoadingState.SUCCESS;
+        this.success = true;
     }
 }

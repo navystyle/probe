@@ -1,0 +1,141 @@
+<clr-wizard #wizard clrWizardSize="lg"
+    [clrWizardPreventNavigation]="loading"
+    [clrWizardDisableStepnav]="true"
+    [clrWizardPreventDefaultCancel]="true"
+    (clrWizardOnCancel)="cancel()"
+    [clrWizardClosable]="!isFinish">
+
+    <clr-wizard-title>sign up</clr-wizard-title>
+
+    <clr-wizard-button type="cancel" *ngIf="!isFinish">Cancel</clr-wizard-button>
+    <clr-wizard-button type="previous" *ngIf="!isFinish">Back</clr-wizard-button>
+    <clr-wizard-button type="next">Next</clr-wizard-button>
+    <clr-wizard-button type="finish">
+        <span *ngIf="untouched && !loading">가입</span>
+        <span *ngIf="loading">가입중..</span>
+        <span *ngIf="isFinish">완료</span>
+    </clr-wizard-button>
+
+    <clr-wizard-page
+        [clrWizardPageNextDisabled]="formGroup.invalid">
+
+        <ng-template clrPageTitle>your account</ng-template>
+        <ng-template clrPageNavTitle>
+            <span *ngIf="isFirst">step</span>
+            <span *ngIf="!isFirst">finish!</span>
+        </ng-template>
+
+        <form [formGroup]="formGroup">
+            <section class="form-block">
+                <div class="form-group">
+                    <label>Email</label>
+                    <label class="tooltip tooltip-validation tooltip-md tooltip-bottom-left"
+                           [class.invalid]="invalid(formGroup.get('email'))">
+                        <input type="text" formControlName="email">
+                        <span class="tooltip-content" *ngIf="formGroup.get('email').hasError('required')">
+                            필수!
+                        </span>
+                        <span class="tooltip-content" *ngIf="formGroup.get('email').hasError('email')">
+                            이메일 형식이 올바르지 않습니다.
+                        </span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <label class="tooltip tooltip-validation tooltip-md tooltip-bottom-left"
+                           [class.invalid]="invalid(formGroup.get('name'))">
+                        <input type="text" formControlName="name">
+                        <span class="tooltip-content" *ngIf="formGroup.get('name').hasError('required')">
+                            필수!
+                        </span>
+                        <span class="tooltip-content" *ngIf="formGroup.get('name').hasError('pattern')">
+                            아이디는 영문+숫자만 가능합니다.
+                        </span>
+                        <span class="tooltip-content" *ngIf="formGroup.get('name').hasError('minlength')">
+                            최소 4자 이상 입력해주세요.
+                        </span>
+                        <span class="tooltip-content" *ngIf="formGroup.get('name').hasError('maxlength')">
+                            최대 20자 까지 가능합니다.
+                        </span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <label class="tooltip tooltip-validation tooltip-md tooltip-bottom-left"
+                           [class.invalid]="invalid(formGroup.get('password'))">
+                        <input type="password" formControlName="password">
+                        <span class="tooltip-content" *ngIf="formGroup.get('password').hasError('required')">
+                            필수!
+                        </span>
+                        <span class="tooltip-content" *ngIf="formGroup.get('password').hasError('minlength')">
+                            최소 4자 이상 입력해주세요.
+                        </span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Password Confirm</label>
+                    <label class="tooltip tooltip-validation tooltip-md tooltip-bottom-left"
+                           [class.invalid]="invalid(formGroup.get('password_confirm'))">
+                        <input type="password" formControlName="password_confirm">
+                        <span class="tooltip-content" *ngIf="formGroup.get('password_confirm').hasError('required')">
+                            필수!
+                        </span>
+                        <span class="tooltip-content" *ngIf="formGroup.get('password_confirm').hasError('misMatch')">
+                            위의 패스워드와 일치하지 않습니다.
+                        </span>
+                    </label>
+                </div>
+            </section>
+
+            <clr-alert [clrAlertClosable]="false">
+                <div clr-alert-item class="alert-item">
+                    <span class="alert-text">
+                        계정 정보 및 사이트 이용시 사용하는 데이터는 모두 이 서버에 저장됩니다. <br>동의하시면 체크해주세요.
+                    </span>
+                    <div class="alert-actions">
+                        <clr-checkbox formControlName="agree"></clr-checkbox>
+                    </div>
+                </div>
+            </clr-alert>
+        </form>
+    </clr-wizard-page>
+
+    <clr-wizard-page
+        [clrWizardPagePreventDefaultNext]="true"
+        (clrWizardPageOnCommit)="submit()"
+        (clrWizardPagePrevious)="previous()">
+
+        <ng-template clrPageTitle>
+            <span *ngIf="!isFinish">check account</span>
+            <span *ngIf="isFinish">finish!</span>
+        </ng-template>
+        <ng-template clrPageNavTitle>
+            <span *ngIf="!isFinish">step</span>
+            <span *ngIf="isFinish">finish!</span>
+        </ng-template>
+
+        <span class="spinner" *ngIf="loading" style="z-index: 1;"></span>
+        <error [error]="errorWizard" [small]="true"></error>
+
+        <div *ngIf="formGroup.valid && untouched && !loading">
+            <p>아래 입력한 정보 확인 후 가입 버튼을 누르면 가입 승인 메일이 발송됩니다.</p>
+            <form class="compact">
+                <section class="form-block">
+                    <div class="form-group">
+                        <label>Your email:</label>
+                        <span>{{ formGroup.get('email').value }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Your name:</label>
+                        <span>{{ formGroup.get('name').value }}</span>
+                    </div>
+                </section>
+            </form>
+        </div>
+
+        <p *ngIf="isFinish">
+            {{ formGroup.get('name').value }}님 가입 신청이 완료되어 승인 메일이 발송 되었습니다.<br>
+            이제 {{ formGroup.get('email').value }} 에서 승인 메일을 확인해주세요.
+        </p>
+    </clr-wizard-page>
+</clr-wizard>

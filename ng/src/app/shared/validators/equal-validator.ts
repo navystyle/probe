@@ -1,10 +1,10 @@
-import {FormControl, ValidatorFn, AbstractControl} from '@angular/forms';
+import {FormControl, ValidatorFn, ValidationErrors} from '@angular/forms';
 
-export function equalValidator(fieldName: string) {
+export function equalValidator(fieldName: string): ValidatorFn {
     let fcfirst: FormControl;
     let fcSecond: FormControl;
 
-    return function equalValidator(control: FormControl): ValidatorFn {
+    return function equalValidator(control: FormControl): ValidationErrors {
 
         if (!control.parent) {
             return null;
@@ -31,11 +31,9 @@ export function equalValidator(fieldName: string) {
         }
 
         if (fcSecond.value !== fcfirst.value) {
-            return (control: AbstractControl): { [key: string]: boolean } => {
-                return {
-                    misMatch: true
-                };
-            }
+            return {
+                misMatch: true
+            };
         }
 
         return null;
