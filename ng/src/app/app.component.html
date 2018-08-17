@@ -1,13 +1,61 @@
 <clr-main-container>
     <app-header *ngIf="isAuthenticated()"></app-header>
     <div class="content-container">
-        <main class="content-area">
+        <main class="content-area p-0">
             <router-outlet></router-outlet>
         </main>
-        <clr-vertical-nav [clrVerticalNavCollapsible]="true" [clr-nav-level]="1" *ngIf="isAuthenticated()">
+        <clr-vertical-nav
+                [clrVerticalNavCollapsible]="true"
+                [(clrVerticalNavCollapsed)]="collapsed"
+                [clr-nav-level]="1"
+                *ngIf="isAuthenticated()"
+                class="border-right">
             <a clrVerticalNavLink routerLink="/task" routerLinkActive="active">
                 <clr-icon clrVerticalNavIcon shape="tasks"></clr-icon>
                 task
+            </a>
+        </clr-vertical-nav>
+
+        <clr-vertical-nav [clr-nav-level]="2" class="pt-0">
+            <div style="width: 100%; " class="border-right">
+                <label>
+                    <clr-icon shape="search" style="margin-left: 5px"></clr-icon>
+                    <input type="text" class="task-search" placeholder="search your task">
+                </label>
+            </div>
+
+            <div class="alert alert-app-level alert-info">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="caret" dir="down"></clr-icon>
+                        </div>
+                        <div class="alert-text">
+                            2018 Feb
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a clrVerticalNavLink
+               *ngFor="let test of tests"
+               routerLink="./charmander"
+               routerLinkActive="active"
+               style="flex-basis: 3rem"
+               class="border-right border-bottom p-0">
+                <div class="clr-row clr-align-items-center wt-100 ht-100 m-0" >
+                    <div class="clr-col-9">
+                        <h6 class="m-0 text-truncate">Title</h6>
+                        <p class="p8 mt-0 text-truncate">sub title</p>
+                    </div>
+                    <div class="clr-col-3 text-center">
+                        <h4 class="m-0">
+                            31
+                            <p class="task-dotw">
+                                Mon
+                            </p>
+                        </h4>
+                    </div>
+                </div>
             </a>
         </clr-vertical-nav>
     </div>

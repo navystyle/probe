@@ -59,21 +59,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.router.navigate([this.returnUrl]);
     }
 
-    // 안쓰고있음
-    validate(formGroup: FormGroup): boolean {
-        for (let property in formGroup.controls) {
-            if (formGroup.controls.hasOwnProperty(property)) {
-                let control = formGroup.controls[property];
-
-                if (control.hasOwnProperty('controls')) {
-                    this.validate(control as FormGroup);
-                }
-            }
-        }
-
-        return formGroup.valid;
-    }
-
     invalid(control: FormControl): boolean {
         return control.invalid && (control.dirty || control.touched)
     }
