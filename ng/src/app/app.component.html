@@ -37,6 +37,7 @@
                 </div>
             </div>
             <a clrVerticalNavLink
+               *ngIf="isAuthenticated()"
                *ngFor="let test of tests"
                routerLink="./charmander"
                routerLinkActive="active"
