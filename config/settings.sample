@@ -31,7 +31,7 @@ return [
             'auto_reload' => true
         ],
         'db' => [
-            'host' => 'db.local',  //Your Database Hostname
+            'host' => '192.168.10.10',  //Your Database Hostname
             'port' => '3306',   //Database Port
             'username' => 'homestead',   //Database Username
             'password' => 'secret',   //Database Password
@@ -43,7 +43,7 @@ return [
         'host'       => 'smtp.gmail.com',  // SMTP Host
         'port'       => '587',  // SMTP Port
         'username'   => 'realnavystyle@gmail.com',
-        'password'   => 'new15266',
+        'password'   => 'new1526615!',
         'protocol'   => 'TLS',   // SSL or TLS
         'from_email' => 'realnavystyle@gmail.com',
         'from_name'  => 'navy lab',

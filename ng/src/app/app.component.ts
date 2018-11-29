@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "./core/services/auth.service";
+import {ActivatedRouteSnapshot, NavigationEnd, Router} from "@angular/router";
 
 @Component({
     selector: 'app-root',
@@ -7,17 +8,27 @@ import {AuthService} from "./core/services/auth.service";
 })
 export class AppComponent implements OnInit {
     title = 'probe';
-    collapsed: string;
-    tests: any = [];
+    collapsed: string = 'collapsed';
+    taskBar: boolean = false;
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService,
+                private router: Router) {
     }
 
     ngOnInit(): void {
-        this.collapsed = 'collapsed';
-        for (let i = 1; i<32; i++) {
-            this.tests.push(i);
-        }
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                let getSnapshotData = (routeSnapshot: ActivatedRouteSnapshot) => {
+                    let data = routeSnapshot.data ? routeSnapshot.data['taskBar'] : false;
+                    if (routeSnapshot.firstChild) {
+                        data = getSnapshotData(routeSnapshot.firstChild) || data;
+                    }
+                    return data;
+                };
+
+                this.taskBar = getSnapshotData(this.router.routerState.snapshot.root);
+            }
+        })
     }
 
     isAuthenticated() {

@@ -16,7 +16,7 @@
             </a>
         </clr-vertical-nav>
 
-        <clr-vertical-nav [clr-nav-level]="2" class="pt-0">
+        <clr-vertical-nav [clr-nav-level]="2" class="pt-0" *ngIf="taskBar">
             <div style="width: 100%; " class="border-right">
                 <label>
                     <clr-icon shape="search" style="margin-left: 5px"></clr-icon>
@@ -37,8 +37,6 @@
                 </div>
             </div>
             <a clrVerticalNavLink
-               *ngIf="isAuthenticated()"
-               *ngFor="let test of tests"
                routerLink="./charmander"
                routerLinkActive="active"
                style="flex-basis: 3rem"
